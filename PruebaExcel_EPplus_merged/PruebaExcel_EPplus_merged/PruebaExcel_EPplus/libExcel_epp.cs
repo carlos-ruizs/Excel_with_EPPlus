@@ -312,6 +312,7 @@ namespace PruebaExcel_EPplus
                     Dictionary<string, List<string>> worksheetContent = new Dictionary<string, List<string>>(); //A dictionary where the column names are the keys and the values inside the cells are saved in a list
                     List<string> keyValues = new List<string>();
                     List<string> valNames = new List<string>();
+                    List<string> rowValues = new List<string>();
 
                     for (int colIndex = worksheet.Dimension.Start.Column; colIndex <= worksheet.Dimension.End.Column; colIndex++) //iterates through the names of the columns which act as headers
                     {
@@ -322,7 +323,7 @@ namespace PruebaExcel_EPplus
                     Console.WriteLine("List of keys of the would be dictionary: ");
                     foreach (string key in keyValues)
                     {
-                        Console.WriteLine(key);
+                        Console.Write(key + " ");
                     }
                     Console.ReadKey();
                     Console.Clear();
@@ -336,7 +337,7 @@ namespace PruebaExcel_EPplus
                     Console.ReadKey();
                     Console.Clear();
                     
-
+                    
                     for (int colIndex = worksheet.Dimension.Start.Column; colIndex <= worksheet.Dimension.End.Column; colIndex++)
                     {
                         for (int rowIndex = worksheet.Dimension.Start.Row + 1; rowIndex <= worksheet.Dimension.End.Row; rowIndex++) //this iterates through EVERY row at once, check if I can set the dimension of the rows to iterate in a dynamic way
@@ -344,7 +345,7 @@ namespace PruebaExcel_EPplus
                             string columnName = worksheet.Cells[rowIndex, colIndex].Value.ToString();
                             valNames.Add(columnName);
                         }
-                        worksheetContent.Add(keyValues[colIndex-1],valNames);
+                        //worksheetContent.Add(keyValues[colIndex-1],valNames); //this is correct in it's idea but the loops are apparently wrong
                     }
 
                     Console.WriteLine("List of values inside the cells: ");
@@ -355,6 +356,7 @@ namespace PruebaExcel_EPplus
                     Console.ReadKey();
                     Console.Clear();
 
+                    /**
                     Console.WriteLine("The values inside the dictionary are: ");
                     foreach(KeyValuePair<string,List<string>> kvp in worksheetContent)
                     {
@@ -364,7 +366,7 @@ namespace PruebaExcel_EPplus
                         }
                     }
                     Console.ReadKey();
-
+                    */
                     /**
                     for (int rowIndex = worksheet.Dimension.Start.Row + 1; rowIndex <= worksheet.Dimension.End.Row; rowIndex++) //iterates from the first element of the first row, to the last element of the last row
                     {
@@ -383,6 +385,10 @@ namespace PruebaExcel_EPplus
 
         }
 
+        public void IterateByRow(ExcelWorksheet pewWorksheetObject, int pintRowLimit, List<string> plRowValues)
+        {
+            for (int colIndex = pewWorksheetObject.Dimension.Start.Column; colIndex )
+        }
 
         public void Excel_Create(string SheetName, int col1, int col2, string col3, string URL)
         {
