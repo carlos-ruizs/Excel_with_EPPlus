@@ -3,7 +3,7 @@
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <RestoreSuccess Condition=" '$(RestoreSuccess)' == '' ">True</RestoreSuccess>
     <RestoreTool Condition=" '$(RestoreTool)' == '' ">NuGet</RestoreTool>
-    <ProjectAssetsFile Condition=" '$(ProjectAssetsFile)' == '' ">C:\Users\cruiz\Desktop\New folder\PruebaExcel_EPplus_merged\PruebaExcel_EPplus_merged\PruebaExcel_EPplus\obj\project.assets.json</ProjectAssetsFile>
+    <ProjectAssetsFile Condition=" '$(ProjectAssetsFile)' == '' ">C:\Users\cruiz\Documents\Repositorio\Excel_with_EPPlus\PruebaExcel_EPplus_merged\PruebaExcel_EPplus_merged\PruebaExcel_EPplus\obj\project.assets.json</ProjectAssetsFile>
     <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">$(UserProfile)\.nuget\packages\</NuGetPackageRoot>
     <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">C:\Users\cruiz\.nuget\packages\;C:\Program Files (x86)\Microsoft SDKs\NuGetPackagesFallback\;C:\Program Files\dotnet\sdk\NuGetFallbackFolder</NuGetPackageFolders>
     <NuGetProjectStyle Condition=" '$(NuGetProjectStyle)' == '' ">PackageReference</NuGetProjectStyle>
