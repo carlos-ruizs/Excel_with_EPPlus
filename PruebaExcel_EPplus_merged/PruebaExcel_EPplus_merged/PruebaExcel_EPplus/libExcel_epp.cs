@@ -311,23 +311,59 @@ namespace PruebaExcel_EPplus
                     ExcelWorksheet worksheet = objExcel.Workbook.Worksheets[pstrWorksheetName];
                     Dictionary<string, List<string>> worksheetContent = new Dictionary<string, List<string>>(); //A dictionary where the column names are the keys and the values inside the cells are saved in a list
                     List<string> keyValues = new List<string>();
+                    List<string> valNames = new List<string>();
 
-                    for(int colIndex = worksheet.Dimension.Start.Column; colIndex <= worksheet.Dimension.End.Column; colIndex++)
+                    for (int colIndex = worksheet.Dimension.Start.Column; colIndex <= worksheet.Dimension.End.Column; colIndex++) //iterates through the names of the columns which act as headers
                     {
-                        string columnName = worksheet.Cells[1, colIndex].Value.ToString();
-                        keyValues.Add(columnName);
+                        string columnName = worksheet.Cells[1, colIndex].Value.ToString(); //takes the names of the columns and converts them to a string
+                        keyValues.Add(columnName);//Adds the names to the list
                     }
 
                     Console.WriteLine("List of keys of the would be dictionary: ");
-                    foreach(string key in keyValues)
+                    foreach (string key in keyValues)
                     {
                         Console.WriteLine(key);
                     }
                     Console.ReadKey();
+                    Console.Clear();
 
+                    string Dimension = worksheet.Dimension.Address;
+                    int rowCount = worksheet.Dimension.Rows;
+                    int colCount = worksheet.Dimension.Columns;
 
+                    Console.WriteLine("The dimension of the Worksheet: {0}", Dimension);
+                    Console.WriteLine("There are {0} rows and {1} columns being used in the worksheet", rowCount, colCount);
+                    Console.ReadKey();
+                    Console.Clear();
+                    
 
+                    for (int colIndex = worksheet.Dimension.Start.Column; colIndex <= worksheet.Dimension.End.Column; colIndex++)
+                    {
+                        for (int rowIndex = worksheet.Dimension.Start.Row + 1; rowIndex <= worksheet.Dimension.End.Row; rowIndex++) //this iterates through EVERY row at once, check if I can set the dimension of the rows to iterate in a dynamic way
+                        {
+                            string columnName = worksheet.Cells[rowIndex, colIndex].Value.ToString();
+                            valNames.Add(columnName);
+                        }
+                        worksheetContent.Add(keyValues[colIndex-1],valNames);
+                    }
 
+                    Console.WriteLine("List of values inside the cells: ");
+                    foreach (string val in valNames)
+                    {
+                        Console.WriteLine(val);
+                    }
+                    Console.ReadKey();
+                    Console.Clear();
+
+                    Console.WriteLine("The values inside the dictionary are: ");
+                    foreach(KeyValuePair<string,List<string>> kvp in worksheetContent)
+                    {
+                        foreach(string value in kvp.Value)
+                        {
+                            Console.WriteLine("Key = {0}, Value = {1}", kvp.Key, value);
+                        }
+                    }
+                    Console.ReadKey();
 
                     /**
                     for (int rowIndex = worksheet.Dimension.Start.Row + 1; rowIndex <= worksheet.Dimension.End.Row; rowIndex++) //iterates from the first element of the first row, to the last element of the last row
