@@ -13,8 +13,9 @@ namespace PruebaExcel_EPplus
     {
         static void Main(string[] args)
         {
-            libExcel_epp objectoExcel = new libExcel_epp();
 
+            libExcel_epp objectoExcel = new libExcel_epp();
+          
             objectoExcel.HeaderAsKey("WorkbookDiccionario","Sheet 1");
             //objectoExcel.GetDataTableFromExcel(@"E:\WorkbookDiccionario.xlsx", true);
             //libExcel_epp objeto_2 = new libExcel_epp("Worksheet1");

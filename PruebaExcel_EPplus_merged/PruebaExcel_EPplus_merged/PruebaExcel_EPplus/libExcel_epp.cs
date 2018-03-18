@@ -313,6 +313,7 @@ namespace PruebaExcel_EPplus
                     List<string> keyValues = new List<string>();
                     List<string> valNames = new List<string>();
                     List<string> rowValues = new List<string>();
+                    List<string> colValues = new List<string>();
 
                     for (int colIndex = worksheet.Dimension.Start.Column; colIndex <= worksheet.Dimension.End.Column; colIndex++) //iterates through the names of the columns which act as headers
                     {
@@ -356,6 +357,39 @@ namespace PruebaExcel_EPplus
                     Console.ReadKey();
                     Console.Clear();
 
+                    Console.WriteLine("Introduce which row you would like to view: ");
+                    int rowSelected = 0;
+                    rowSelected = int.Parse(Console.ReadLine()); //we must use the parse method so we add the value we want to the rowSelected variable
+                    Console.WriteLine("The row I'm going to check is {0}", rowSelected); //for some strange reason, this isn't giving me the result I want
+                    Console.ReadKey(); //for some reason I'm inputing a 2 and so one but it's been giving me either 50 or 49 or something like that
+                    //Oh, now I know what's happening. It's interpreting my input as a string, an ascii character. I must first parse it. 
+                    /**
+                    for (int colIndex = worksheet.Dimension.Start.Column; colIndex <= worksheet.Dimension.End.Column; colIndex++)
+                    {
+                        string columnName = worksheet.Cells[rowSelected, colIndex].Value.ToString();
+                        rowValues.Add(columnName);
+                    }
+
+                    
+                    Console.WriteLine("The contents in the row selected are:");
+
+                    foreach (string val in rowValues)
+                    {
+                        Console.Write(val + " ");
+                    }
+                    */
+                    IterateByRow(worksheet, rowSelected, rowValues);
+                    Console.ReadKey();
+                    Console.Clear();
+
+                    Console.WriteLine("Introduce which column you would like to view: ");
+                    int colSelected = 0;
+                    colSelected = int.Parse(Console.ReadLine());
+                    Console.WriteLine("The column I'm going to check is {0}", colSelected);
+                    Console.ReadKey();
+                    IterateByColumn(worksheet, colSelected, colValues);
+                    Console.ReadKey();
+                    //IterateByRow(worksheet,rowSelected,rowValues);
                     /**
                     Console.WriteLine("The values inside the dictionary are: ");
                     foreach(KeyValuePair<string,List<string>> kvp in worksheetContent)
@@ -385,9 +419,38 @@ namespace PruebaExcel_EPplus
 
         }
 
+        //Gets the number of the row you want to visualize and prints it
         public void IterateByRow(ExcelWorksheet pewWorksheetObject, int pintRowLimit, List<string> plRowValues)
         {
-            for (int colIndex = pewWorksheetObject.Dimension.Start.Column; colIndex )
+            for (int colIndex = pewWorksheetObject.Dimension.Start.Column; colIndex <= pewWorksheetObject.Dimension.End.Column; colIndex++)
+            {
+                string cellValue = pewWorksheetObject.Cells[pintRowLimit, colIndex].Value.ToString();
+                plRowValues.Add(cellValue);
+            }
+
+            Console.WriteLine("The contents in the row selected are:");
+
+            foreach(string val in plRowValues)
+            {
+                Console.Write(val + " ");
+            }
+        }
+
+        //Gets the number of the column you want to visualize and prints it while omiting the header
+        public void IterateByColumn(ExcelWorksheet pewWorksheetObject, int pintColLimit, List<string> plColValues)
+        {
+            for(int rowIndex = pewWorksheetObject.Dimension.Start.Row + 1; rowIndex <= pewWorksheetObject.Dimension.End.Row; rowIndex++)
+            {
+                string cellValue = pewWorksheetObject.Cells[rowIndex, pintColLimit].Value.ToString();
+                plColValues.Add(cellValue);
+            }
+
+            Console.WriteLine("The contents in the column selected are:");
+
+            foreach(string val in plColValues)
+            {
+                Console.WriteLine(val);
+            }
         }
 
         public void Excel_Create(string SheetName, int col1, int col2, string col3, string URL)
