@@ -378,7 +378,13 @@ namespace PruebaExcel_EPplus
                         Console.Write(val + " ");
                     }
                     */
+
                     IterateByRow(worksheet, rowSelected, rowValues);
+                    foreach (string val in rowValues)
+                    {
+                        Console.Write(val + " ");
+                    }
+
                     Console.ReadKey();
                     Console.Clear();
 
@@ -388,6 +394,10 @@ namespace PruebaExcel_EPplus
                     Console.WriteLine("The column I'm going to check is {0}", colSelected);
                     Console.ReadKey();
                     IterateByColumn(worksheet, colSelected, colValues);
+                    foreach(string val in colValues)
+                    {
+                        Console.WriteLine(val);
+                    }
                     Console.ReadKey();
                     //IterateByRow(worksheet,rowSelected,rowValues);
                     /**
@@ -420,7 +430,7 @@ namespace PruebaExcel_EPplus
         }
 
         //Gets the number of the row you want to visualize and prints it
-        public void IterateByRow(ExcelWorksheet pewWorksheetObject, int pintRowLimit, List<string> plRowValues)
+        public List<string> IterateByRow(ExcelWorksheet pewWorksheetObject, int pintRowLimit, List<string> plRowValues)
         {
             for (int colIndex = pewWorksheetObject.Dimension.Start.Column; colIndex <= pewWorksheetObject.Dimension.End.Column; colIndex++)
             {
@@ -430,14 +440,11 @@ namespace PruebaExcel_EPplus
 
             Console.WriteLine("The contents in the row selected are:");
 
-            foreach(string val in plRowValues)
-            {
-                Console.Write(val + " ");
-            }
+            return plRowValues;
         }
 
         //Gets the number of the column you want to visualize and prints it while omiting the header
-        public void IterateByColumn(ExcelWorksheet pewWorksheetObject, int pintColLimit, List<string> plColValues)
+        public List<string> IterateByColumn(ExcelWorksheet pewWorksheetObject, int pintColLimit, List<string> plColValues)
         {
             for(int rowIndex = pewWorksheetObject.Dimension.Start.Row + 1; rowIndex <= pewWorksheetObject.Dimension.End.Row; rowIndex++)
             {
@@ -447,11 +454,20 @@ namespace PruebaExcel_EPplus
 
             Console.WriteLine("The contents in the column selected are:");
 
-            foreach(string val in plColValues)
+            return plColValues;
+        }
+
+        //Returns the values of the row for a specific key we provide
+        public void IterateByColumnName(ExcelWorksheet pewWorksheetObject, int pintRowLimit, Dictionary<string,List<string>> pdDictionary, List<string> plRowValues)
+        {
+            for (int colIndex = pewWorksheetObject.Dimension.Start.Column; colIndex <= pewWorksheetObject.Dimension.End.Column; colIndex++)
             {
-                Console.WriteLine(val);
+                string cellValue = pewWorksheetObject.Cells[pintRowLimit, colIndex].Value.ToString();
+                plRowValues.Add(cellValue);
             }
         }
+
+
 
         public void Excel_Create(string SheetName, int col1, int col2, string col3, string URL)
         {
