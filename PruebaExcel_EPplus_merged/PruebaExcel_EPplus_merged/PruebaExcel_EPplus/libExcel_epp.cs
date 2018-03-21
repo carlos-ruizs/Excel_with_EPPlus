@@ -346,7 +346,6 @@ namespace PruebaExcel_EPplus
                             string columnName = worksheet.Cells[rowIndex, colIndex].Value.ToString();
                             valNames.Add(columnName);
                         }
-                        //worksheetContent.Add(keyValues[colIndex-1],valNames); //this is correct in it's idea but the loops are apparently wrong
                     }
 
                     Console.WriteLine("List of values inside the cells: ");
@@ -363,21 +362,6 @@ namespace PruebaExcel_EPplus
                     Console.WriteLine("The row I'm going to check is {0}", rowSelected); //for some strange reason, this isn't giving me the result I want
                     Console.ReadKey(); //for some reason I'm inputing a 2 and so one but it's been giving me either 50 or 49 or something like that
                     //Oh, now I know what's happening. It's interpreting my input as a string, an ascii character. I must first parse it. 
-                    /**
-                    for (int colIndex = worksheet.Dimension.Start.Column; colIndex <= worksheet.Dimension.End.Column; colIndex++)
-                    {
-                        string columnName = worksheet.Cells[rowSelected, colIndex].Value.ToString();
-                        rowValues.Add(columnName);
-                    }
-
-                    
-                    Console.WriteLine("The contents in the row selected are:");
-
-                    foreach (string val in rowValues)
-                    {
-                        Console.Write(val + " ");
-                    }
-                    */
 
                     IterateByRow(worksheet, rowSelected, rowValues);
                     foreach (string val in rowValues)
@@ -399,34 +383,20 @@ namespace PruebaExcel_EPplus
                         Console.WriteLine(val);
                     }
                     Console.ReadKey();
-                    //IterateByRow(worksheet,rowSelected,rowValues);
-                    /**
-                    Console.WriteLine("The values inside the dictionary are: ");
-                    foreach(KeyValuePair<string,List<string>> kvp in worksheetContent)
-                    {
-                        foreach(string value in kvp.Value)
-                        {
-                            Console.WriteLine("Key = {0}, Value = {1}", kvp.Key, value);
-                        }
-                    }
+                    Console.Clear();
+
+                    Console.WriteLine("Introduce in which column you want to search (By name): ");
+                    string colName = null;
+                    colName = Console.ReadLine();
+                    Console.WriteLine("Introduce in which row you want to search for the value: ");
+                    int row = 0;
+                    row = int.Parse(Console.ReadLine());
+                    Console.Clear();
+                    Console.WriteLine("I'll be searching for the value in {0} at row {1}", colName, row);
+                    Console.WriteLine("The value is: {0}", IterateByColumnName(worksheet, row, keyValues, colName));
                     Console.ReadKey();
-                    */
-                    /**
-                    for (int rowIndex = worksheet.Dimension.Start.Row + 1; rowIndex <= worksheet.Dimension.End.Row; rowIndex++) //iterates from the first element of the first row, to the last element of the last row
-                    {
-                        for (int colIndex = worksheet.Dimension.Start.Column; colIndex <= worksheet.Dimension.End.Column; colIndex++) //does the same thing as the loop before but for the column values
-                        {
-                            if (worksheet.Cells[rowIndex, colIndex].Value != null) //if the value in a specific cell isn't null, then
-                            {
-                               
-                                
-                            }
-                        }
-                    }
-                    */
                 }
             }
-
         }
 
         //Gets the number of the row you want to visualize and prints it
@@ -457,14 +427,15 @@ namespace PruebaExcel_EPplus
             return plColValues;
         }
 
-        //Returns the values of the row for a specific key we provide
-        public void IterateByColumnName(ExcelWorksheet pewWorksheetObject, int pintRowLimit, Dictionary<string,List<string>> pdDictionary, List<string> plRowValues)
+        //Returns the values in the row for a specific key we provide
+        public string IterateByColumnName(ExcelWorksheet pewWorksheetObject, int pintRowLimit, List<string> plColNames, string pstrSelectedColumn)
         {
-            for (int colIndex = pewWorksheetObject.Dimension.Start.Column; colIndex <= pewWorksheetObject.Dimension.End.Column; colIndex++)
-            {
-                string cellValue = pewWorksheetObject.Cells[pintRowLimit, colIndex].Value.ToString();
-                plRowValues.Add(cellValue);
-            }
+            int colLimit = plColNames.IndexOf(pstrSelectedColumn);
+            Console.WriteLine("The index of the selected column is: {0}", colLimit);
+            Console.ReadKey();
+            string cellValue = pewWorksheetObject.Cells[pintRowLimit, colLimit + 1].Value.ToString();
+
+            return cellValue;
         }
 
 
