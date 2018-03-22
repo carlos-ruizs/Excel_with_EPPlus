@@ -250,7 +250,21 @@ namespace PruebaExcel_EPplus
             m_objExcel.Save();
         }
 
+        /// <summary>
+        /// Gets a worksheet and counts the rows and columns used as well as the extension of the data in the worksheet
+        /// </summary>
+        /// <param name="pewWorksheetObject"></param>
+        public void WorksheetDimensions(ExcelWorksheet pewWorksheetObject)
+        {
+            string Dimension = pewWorksheetObject.Dimension.Address;
+            int rowCount = pewWorksheetObject.Dimension.Rows;
+            int colCount = pewWorksheetObject.Dimension.Columns;
 
+            Console.WriteLine("The dimensions of the Worksheet are: {0}", Dimension);
+            Console.WriteLine("There are {0} rows and {1} columns being used in the worksheet", rowCount, colCount);
+            Console.ReadKey();
+            Console.Clear();
+        }
 
         public void DataManipulation(string pstrWorkbookName, string pstrWorksheetName)
         {
@@ -302,43 +316,22 @@ namespace PruebaExcel_EPplus
 
         public void HeaderAsKey(string pstrWorkbookName, string pstrWorksheetName)
         {
-            using (FileStream stream = new FileStream(@"E:\" + pstrWorkbookName + ".xlsx", FileMode.Open))
+            using (FileStream stream = new FileStream(@"E:\" + pstrWorkbookName + ".xlsx", FileMode.Open)) //creates a file stream to the file we want to manipulate
             {
                 using (ExcelPackage objExcel = new ExcelPackage())
                 {
                     Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
                     objExcel.Load(stream);
                     ExcelWorksheet worksheet = objExcel.Workbook.Worksheets[pstrWorksheetName];
-                    Dictionary<string, List<string>> worksheetContent = new Dictionary<string, List<string>>(); //A dictionary where the column names are the keys and the values inside the cells are saved in a list
-                    List<string> keyValues = new List<string>();
+                    List<string> headerNames = new List<string>(); //List that holds the names of the headers in the worksheet
                     List<string> valNames = new List<string>();
                     List<string> rowValues = new List<string>();
                     List<string> colValues = new List<string>();
 
-                    for (int colIndex = worksheet.Dimension.Start.Column; colIndex <= worksheet.Dimension.End.Column; colIndex++) //iterates through the names of the columns which act as headers
-                    {
-                        string columnName = worksheet.Cells[1, colIndex].Value.ToString(); //takes the names of the columns and converts them to a string
-                        keyValues.Add(columnName);//Adds the names to the list
-                    }
+                    GetWorksheetHeader(worksheet, headerNames);
 
-                    Console.WriteLine("List of keys of the would be dictionary: ");
-                    foreach (string key in keyValues)
-                    {
-                        Console.Write(key + " ");
-                    }
-                    Console.ReadKey();
-                    Console.Clear();
+                    WorksheetDimensions(worksheet);
 
-                    string Dimension = worksheet.Dimension.Address;
-                    int rowCount = worksheet.Dimension.Rows;
-                    int colCount = worksheet.Dimension.Columns;
-
-                    Console.WriteLine("The dimension of the Worksheet: {0}", Dimension);
-                    Console.WriteLine("There are {0} rows and {1} columns being used in the worksheet", rowCount, colCount);
-                    Console.ReadKey();
-                    Console.Clear();
-                    
-                    
                     for (int colIndex = worksheet.Dimension.Start.Column; colIndex <= worksheet.Dimension.End.Column; colIndex++)
                     {
                         for (int rowIndex = worksheet.Dimension.Start.Row + 1; rowIndex <= worksheet.Dimension.End.Row; rowIndex++) //this iterates through EVERY row at once, check if I can set the dimension of the rows to iterate in a dynamic way
@@ -359,9 +352,8 @@ namespace PruebaExcel_EPplus
                     Console.WriteLine("Introduce which row you would like to view: ");
                     int rowSelected = 0;
                     rowSelected = int.Parse(Console.ReadLine()); //we must use the parse method so we add the value we want to the rowSelected variable
-                    Console.WriteLine("The row I'm going to check is {0}", rowSelected); //for some strange reason, this isn't giving me the result I want
-                    Console.ReadKey(); //for some reason I'm inputing a 2 and so one but it's been giving me either 50 or 49 or something like that
-                    //Oh, now I know what's happening. It's interpreting my input as a string, an ascii character. I must first parse it. 
+                    Console.WriteLine("The row I'm going to check is {0}", rowSelected);
+                    Console.ReadKey(); 
 
                     IterateByRow(worksheet, rowSelected, rowValues);
                     foreach (string val in rowValues)
@@ -393,13 +385,42 @@ namespace PruebaExcel_EPplus
                     row = int.Parse(Console.ReadLine());
                     Console.Clear();
                     Console.WriteLine("I'll be searching for the value in {0} at row {1}", colName, row);
-                    Console.WriteLine("The value is: {0}", IterateByColumnName(worksheet, row, keyValues, colName));
+                    Console.WriteLine("The value is: {0}", IterateByColumnName(worksheet, row, headerNames, colName));
                     Console.ReadKey();
                 }
             }
         }
 
-        //Gets the number of the row you want to visualize and prints it
+        /// <summary>
+        /// Gets a worksheet and a list in which it will save the names of the headers and prints them
+        /// </summary>
+        /// <param name="pewWorksheetObject"></param>
+        /// <param name="plHeaderNames"></param>
+        public void GetWorksheetHeader(ExcelWorksheet pewWorksheetObject, List<string> plHeaderNames)
+        {
+            //iterates through the names of the columns which act as headers
+            for (int colIndex = pewWorksheetObject.Dimension.Start.Column; colIndex <= pewWorksheetObject.Dimension.End.Column; colIndex++)
+            {
+                string columnName = pewWorksheetObject.Cells[1, colIndex].Value.ToString(); //takes the names of the columns and converts them to a string
+                plHeaderNames.Add(columnName);//Adds the names of the headers to a list in an ordered manner
+            }
+
+            Console.WriteLine("Headers inside the worksheet (in order): ");
+            foreach (string header in plHeaderNames)
+            {
+                Console.Write(header + " ");
+            }
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        /// <summary>
+        /// Gets the number of the row you want to visualize and prints it
+        /// </summary>
+        /// <param name="pewWorksheetObject"></param>
+        /// <param name="pintRowLimit"></param>
+        /// <param name="plRowValues"></param>
+        /// <returns></returns>
         public List<string> IterateByRow(ExcelWorksheet pewWorksheetObject, int pintRowLimit, List<string> plRowValues)
         {
             for (int colIndex = pewWorksheetObject.Dimension.Start.Column; colIndex <= pewWorksheetObject.Dimension.End.Column; colIndex++)
@@ -413,7 +434,13 @@ namespace PruebaExcel_EPplus
             return plRowValues;
         }
 
-        //Gets the number of the column you want to visualize and prints it while omiting the header
+        /// <summary>
+        /// Gets the number of the column you want to visualize and prints it while omiting the header
+        /// </summary>
+        /// <param name="pewWorksheetObject"></param>
+        /// <param name="pintColLimit"></param>
+        /// <param name="plColValues"></param>
+        /// <returns></returns>
         public List<string> IterateByColumn(ExcelWorksheet pewWorksheetObject, int pintColLimit, List<string> plColValues)
         {
             for(int rowIndex = pewWorksheetObject.Dimension.Start.Row + 1; rowIndex <= pewWorksheetObject.Dimension.End.Row; rowIndex++)
@@ -427,7 +454,14 @@ namespace PruebaExcel_EPplus
             return plColValues;
         }
 
-        //Returns the values in the row for a specific key we provide
+        /// <summary>
+        /// Returns the value in the row for a specific key we provide
+        /// </summary>
+        /// <param name="pewWorksheetObject"></param>
+        /// <param name="pintRowLimit"></param>
+        /// <param name="plColNames"></param>
+        /// <param name="pstrSelectedColumn"></param>
+        /// <returns></returns>
         public string IterateByColumnName(ExcelWorksheet pewWorksheetObject, int pintRowLimit, List<string> plColNames, string pstrSelectedColumn)
         {
             int colLimit = plColNames.IndexOf(pstrSelectedColumn);
