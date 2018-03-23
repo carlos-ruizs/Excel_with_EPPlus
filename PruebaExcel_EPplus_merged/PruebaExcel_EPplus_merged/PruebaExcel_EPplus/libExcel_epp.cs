@@ -314,7 +314,7 @@ namespace PruebaExcel_EPplus
             }
         }
 
-        public void HeaderAsKey(string pstrWorkbookName, string pstrWorksheetName)
+        public void FindElements(string pstrWorkbookName, string pstrWorksheetName)
         {
             using (FileStream stream = new FileStream(@"E:\" + pstrWorkbookName + ".xlsx", FileMode.Open)) //creates a file stream to the file we want to manipulate
             {
@@ -324,7 +324,6 @@ namespace PruebaExcel_EPplus
                     objExcel.Load(stream);
                     ExcelWorksheet worksheet = objExcel.Workbook.Worksheets[pstrWorksheetName];
                     List<string> headerNames = new List<string>(); //List that holds the names of the headers in the worksheet
-                    List<string> valNames = new List<string>();
                     List<string> rowValues = new List<string>();
                     List<string> colValues = new List<string>();
 
@@ -332,29 +331,9 @@ namespace PruebaExcel_EPplus
 
                     WorksheetDimensions(worksheet);
 
-                    for (int colIndex = worksheet.Dimension.Start.Column; colIndex <= worksheet.Dimension.End.Column; colIndex++)
-                    {
-                        for (int rowIndex = worksheet.Dimension.Start.Row + 1; rowIndex <= worksheet.Dimension.End.Row; rowIndex++) //this iterates through EVERY row at once, check if I can set the dimension of the rows to iterate in a dynamic way
-                        {
-                            string columnName = worksheet.Cells[rowIndex, colIndex].Value.ToString();
-                            valNames.Add(columnName);
-                        }
-                    }
-
-                    Console.WriteLine("List of values inside the cells: ");
-                    foreach (string val in valNames)
-                    {
-                        Console.WriteLine(val);
-                    }
-                    Console.ReadKey();
-                    Console.Clear();
-
                     Console.WriteLine("Introduce which row you would like to view: ");
                     int rowSelected = 0;
                     rowSelected = int.Parse(Console.ReadLine()); //we must use the parse method so we add the value we want to the rowSelected variable
-                    Console.WriteLine("The row I'm going to check is {0}", rowSelected);
-                    Console.ReadKey(); 
-
                     IterateByRow(worksheet, rowSelected, rowValues);
                     foreach (string val in rowValues)
                     {
@@ -367,8 +346,6 @@ namespace PruebaExcel_EPplus
                     Console.WriteLine("Introduce which column you would like to view: ");
                     int colSelected = 0;
                     colSelected = int.Parse(Console.ReadLine());
-                    Console.WriteLine("The column I'm going to check is {0}", colSelected);
-                    Console.ReadKey();
                     IterateByColumn(worksheet, colSelected, colValues);
                     foreach(string val in colValues)
                     {
@@ -383,8 +360,6 @@ namespace PruebaExcel_EPplus
                     Console.WriteLine("Introduce in which row you want to search for the value: ");
                     int row = 0;
                     row = int.Parse(Console.ReadLine());
-                    Console.Clear();
-                    Console.WriteLine("I'll be searching for the value in {0} at row {1}", colName, row);
                     Console.WriteLine("The value is: {0}", IterateByColumnName(worksheet, row, headerNames, colName));
                     Console.ReadKey();
                 }
@@ -465,7 +440,6 @@ namespace PruebaExcel_EPplus
         public string IterateByColumnName(ExcelWorksheet pewWorksheetObject, int pintRowLimit, List<string> plColNames, string pstrSelectedColumn)
         {
             int colLimit = plColNames.IndexOf(pstrSelectedColumn);
-            Console.WriteLine("The index of the selected column is: {0}", colLimit);
             Console.ReadKey();
             string cellValue = pewWorksheetObject.Cells[pintRowLimit, colLimit + 1].Value.ToString();
 
